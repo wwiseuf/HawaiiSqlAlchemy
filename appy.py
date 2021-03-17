@@ -9,12 +9,14 @@ from flask import Flask, jsonify
 
 import datetime as dt
 
+import os
+
 
 #################################################
 # Database Setup
 #################################################
 
-engine = create_engine("sqlite:///Resources/titanic.sqlite")
+engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -149,6 +151,6 @@ def tobs():
         tobs_list.append(tobs_dict)
 
     return jsonify(all_tobs)
-    
-    if __name__ == '__main__':
+
+if __name__ == '__main__':
     app.run(debug=True)
