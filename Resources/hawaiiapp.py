@@ -16,7 +16,7 @@ import os
 # Database Setup
 #################################################
 
-engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+engine = create_engine("sqlite:///hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -50,7 +50,7 @@ def calc_temps(start_date, end_date):
         TMIN, TAVG, and TMAX
     """
     
-    return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+    return session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
         filter(measurement.date >= start_date).filter(measurement.date <= end_date).all()
 
 
@@ -78,7 +78,7 @@ def prcp():
 
     print("Received prcp api request.")
     
-    final_date_query = session.query(func.max(func.strftime("%Y-%m-%d", Measurement.date))).all()
+    final_date_query = session.query(func.max(func.strftime("%Y-%m-%d", measurement.date))).all()
     max_date_string = final_date_query[0][0]
     max_date = dt.datetime.strptime(max_date_string, "%Y-%m-%d")
 
@@ -95,12 +95,12 @@ def prcp():
         
     return jsonify(resulting)
 
-    """Return a list of all passenger names"""
+    #Return a list of all passenger names"""
     # Query stations
 
-@app.route("/api/v1.0/station")
-def station():
-    """Return a JSON list of stations from the dataset."""
+    @app.route("/api/v1.0/station")
+    def station():
+        """Return a JSON list of stations from the dataset."""
 
     print("Received station api request.")
 
@@ -109,7 +109,7 @@ def station():
 
     #create a list of dictionaries
     stationlist = []
-    for station in station:
+    for station in stations:
         station_dict = {}
         station_dict["id"] = station.id
         station_dict["station"] = station.station
@@ -117,7 +117,7 @@ def station():
         station_dict["latitude"] = station.latitude
         station_dict["longitude"] = station.longitude
         station_dict["elevation"] = station.elevation
-        stations_list.append(stationlist)
+        stationlist.append(stationlist)
 
     return jsonify(stationlist)
 
@@ -129,7 +129,7 @@ def tobs():
     print("Received tobs api request.")
 
     #We find temperature data for the last year.  First we find the last date in the database
-    final_date_query = session.query(func.max(func.strftime("%Y-%m-%d", Measurement.date))).all()
+    final_date_query = session.query(func.max(func.strftime("%Y-%m-%d", measurement.date))).all()
     max_date_string = final_date_query[0][0]
     max_date = dt.datetime.strptime(max_date_string, "%Y-%m-%d")
 
@@ -148,7 +148,7 @@ def tobs():
         tobs_dict["date"] = result.date
         tobs_dict["station"] = result.station
         tobs_dict["tobs"] = result.tobs
-        tobs_list.append(tobs_dict)
+        all_tobs.append(tobs_dict)
 
     return jsonify(all_tobs)
 
