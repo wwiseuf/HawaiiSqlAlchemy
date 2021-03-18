@@ -98,25 +98,31 @@ def prcp():
     #Return a list of all passenger names"""
     # Query stations
 
-    @app.route("/api/v1.0/station")
-        #Return a JSON list of stations from the dataset."""
+@app.route("/api/v1.0/stations")
+def stations():
+    """Return a JSON list of stations from the dataset."""
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
 
-    #query stations list
-    stations = session.query(station).all()
+    # Query for stations.
+    stations = session.query(station.station, station.name,
+                             station.latitude, station.longitude, station.elevation).all()
 
-    #create a list of dictionaries
-    stationlist = []
-    for station in stations:
+    session.close()
+
+    # Convert the query results to a dictionary.
+    all_stations = []
+    for station, name, latitude, longitude, elevation in stations:
         station_dict = {}
-        station_dict["id"] = station.id
-        station_dict["station"] = station.station
-        station_dict["name"] = station.name
-        station_dict["latitude"] = station.latitude
-        station_dict["longitude"] = station.longitude
-        station_dict["elevation"] = station.elevation
-        stationlist.append(stationlist)
+        station_dict["station"] = station
+        station_dict["name"] = name
+        station_dict["latitude"] = latitude
+        station_dict["longitude"] = longitude
+        station_dict["elevation"] = elevation
+        all_stations.append(station_dict)
 
-    return jsonify(stationlist)
+    # Return the JSON representation of dictionary.
+    return jsonify(all_stations)
 
 
 @app.route("/api/v1.0/tobs")
