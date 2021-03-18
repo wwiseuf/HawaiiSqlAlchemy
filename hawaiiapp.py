@@ -105,8 +105,8 @@ def stations():
     session = Session(engine)
 
     # Query for stations.
-    stations = session.query(station.station, station.name,
-                             station.latitude, station.longitude, station.elevation).all()
+    stations = session.query(stations.station, stations.name,
+                             stations.latitude, stations.longitude, stations.elevation).all()
 
     session.close()
 
